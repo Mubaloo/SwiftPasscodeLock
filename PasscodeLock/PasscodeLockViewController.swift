@@ -139,24 +139,31 @@ open class PasscodeLockViewController: UIViewController, UITextFieldDelegate, Pa
     // MARK: - Events
     
     private func setupEvents() {
+        notificationCenter?.addObserver(
+            self,
+            selector: #selector(PasscodeLockViewController.appWillEnterForegroundHandler(notification:)),
+            name: NSNotification.Name.UIApplicationWillEnterForeground,
+            object: nil
+        )
         
-        notificationCenter?.addObserver(self, selector: "appWillEnterForegroundHandler:", name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
-        notificationCenter?.addObserver(self, selector: "appDidEnterBackgroundHandler:", name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+        notificationCenter?.addObserver(
+            self,
+            selector: #selector(PasscodeLockViewController.appDidEnterBackgroundHandler(notification:)),
+            name: NSNotification.Name.UIApplicationDidEnterBackground,
+            object: nil
+        )
     }
     
     private func clearEvents() {
-        
         notificationCenter?.removeObserver(self, name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         notificationCenter?.removeObserver(self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
     }
     
-    public func appWillEnterForegroundHandler(notification: NSNotification) {
-        
+    @objc public func appWillEnterForegroundHandler(notification: NSNotification) {
         authenticateWithBiometrics()
     }
     
-    public func appDidEnterBackgroundHandler(notification: NSNotification) {
-        
+    @objc public func appDidEnterBackgroundHandler(notification: NSNotification) {
         shouldTryToAuthenticateWithBiometrics = false
     }
     
